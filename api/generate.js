@@ -41,12 +41,16 @@ Rules:
 - Do not mention Tive unless the user explicitly provides Tive as a product or customer context.
 - Keep the output practical and concise.`;
 
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
+
     const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
       },
+      signal: controller.signal,
       body: JSON.stringify({
         model: "gpt-5.6-luna",
         input: [
@@ -58,10 +62,12 @@ Rules:
             role: "user",
             content: prompt
           }
-        ]
+        ],
+        max_output_tokens: 1200
       })
     });
 
+    clearTimeout(timeout);
     const data = await response.json();
 
     if (!response.ok) {
@@ -83,6 +89,10 @@ Rules:
 
     return Response.json({ brief });
   } catch (error) {
-    return Response.json({ error: "Something went wrong while generating the brief." }, { status: 500 });
+    const message = error?.name === "AbortError"
+      ? "The OpenAI request timed out after 15 seconds. The Vercel function is reaching OpenAI but the request is taking too long."
+      : (error?.message || "Something went wrong while generating the brief.");
+    console.error("generate error:", error);
+    return Response.json({ error: message }, { status: 500 });
   }
 }
