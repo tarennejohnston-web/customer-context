@@ -71,10 +71,28 @@ Rules:
       });
     }
 
-    const text = String(data.output_text || "")
+    const outputItems = Array.isArray(data.output) ? data.output : [];
+    const textParts = [];
+
+    for (const item of outputItems) {
+      if (!Array.isArray(item.content)) continue;
+      for (const part of item.content) {
+        if (typeof part.text === "string") {
+          textParts.push(part.text);
+        }
+      }
+    }
+
+    const text = textParts.join("").trim()
       .replace(/^\`\`\`json\s*/i, "")
       .replace(/\s*\`\`\`$/i, "")
       .trim();
+
+    if (!text) {
+      return response.status(502).json({
+        error: "The AI response did not contain usable text. Please try again."
+      });
+    }
 
     let brief;
     try {
