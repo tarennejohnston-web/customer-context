@@ -45,11 +45,17 @@ $("generate").addEventListener("click", async () => {
   };
 
   try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30000);
+
     const response = await fetch("/api/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
+      signal: controller.signal
     });
+
+    clearTimeout(timeout);
 
     const data = await response.json();
 
@@ -59,6 +65,9 @@ $("generate").addEventListener("click", async () => {
 
     renderBrief(payload.company || "This customer", data.brief);
   } catch (error) {
+    if (error.name === "AbortError") {
+      error = new Error("The AI request timed out after 30 seconds. Check the Vercel function logs and OpenAI connection.");
+    }
     result.innerHTML = `<div class="error"><strong>AI generation is not available yet.</strong><p>${escapeHtml(error.message)}</p><p>You can still preview the sample brief by clicking below.</p><button id="demo">View sample brief</button></div>`;
     $("demo").addEventListener("click", () => renderBrief(payload.company || "Apapacho Wines", demoBrief));
   } finally {
