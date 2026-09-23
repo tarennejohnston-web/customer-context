@@ -12,6 +12,7 @@ export default async function handler(request, response) {
     const company = String(body.company || "").trim();
     const website = String(body.website || "").trim();
     const industry = String(body.industry || "").trim();
+    const conversationType = String(body.conversationType || "First conversation").trim();
     const notes = String(body.notes || "").trim();
 
     if (!company) {
@@ -21,9 +22,12 @@ export default async function handler(request, response) {
     const prompt = `Company: ${company}
 Website: ${website || "Not provided"}
 Industry: ${industry || "Not provided"}
+Conversation type: ${conversationType}
 Customer notes: ${notes || "Not provided"}
 
-Create a concise Customer Success account brief. Return ONLY valid JSON with these keys:
+Create a concise Customer Success account brief for a CSM preparing for the specified conversation type.
+
+Return ONLY valid JSON with these keys:
 snapshot: string
 priorities: string[]
 challenges: string[]
@@ -35,10 +39,11 @@ Rules:
 - Do not invent facts.
 - Clearly frame reasonable inferences as hypotheses.
 - Use the supplied notes as facts, but do not treat assumptions as verified facts.
-- Focus on helping a CSM prepare for a useful customer conversation.
+- Keep the brief company and industry agnostic.
+- Tailor the questions, opportunities, and risks to the conversation type.
+- Make the questions CSM focused: goals, outcomes, adoption, stakeholders, friction, satisfaction, value, next steps, or renewal and expansion considerations when relevant.
+- Avoid questions that are overly specific to the customer's industry unless the supplied context makes them clearly relevant.
 - Keep each list to 3 items.
-- Make the questions specific to this customer's likely operations.
-- Do not mention Tive unless the user explicitly provides Tive as a product or customer context.
 - Keep the output practical and concise.`;
 
     const openaiResponse = await fetch("https://api.openai.com/v1/responses", {
@@ -52,7 +57,7 @@ Rules:
         input: [
           {
             role: "developer",
-            content: "You are a Customer Success research assistant. Help CSMs understand customers quickly while being explicit about uncertainty."
+            content: "You are a Customer Success research assistant. Help CSMs prepare for customer conversations quickly while being explicit about uncertainty."
           },
           {
             role: "user",
