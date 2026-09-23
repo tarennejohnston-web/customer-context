@@ -1,28 +1,28 @@
 const demoBrief = {
-  snapshot: "Alpine Fresh is a fresh produce company where shipment conditions and delivery timing can directly affect product quality. The details below are based on public customer context and are intended as a sample starting point for a CSM conversation.",
+  snapshot: "Thrive Causemetics is a beauty and cosmetics brand with a strong focus on customer experience, product innovation, and community impact. The details below are based on public customer context and are intended as a sample starting point for a CSM conversation.",
   priorities: [
-    "Protect product quality during transit",
-    "Reduce delays and temperature related shipment issues",
-    "Create earlier visibility into shipments that may need intervention"
+    "Deliver a strong customer experience across the buying journey",
+    "Understand how customers are engaging with products and where there is room to improve",
+    "Support continued growth while maintaining customer trust and loyalty"
   ],
   challenges: [
-    "Fresh produce can be especially sensitive to temperature conditions during transit",
-    "A shipment issue can become costly if the team learns about it after the product is already at risk",
-    "Operational teams need a clear process for deciding when and how to intervene"
+    "Customer expectations can change quickly as product preferences and buying behavior evolve",
+    "A customer issue or point of friction can affect both satisfaction and long term loyalty",
+    "Teams need clear visibility into customer feedback, adoption, and areas where the experience could improve"
   ],
   questions: [
     "What outcomes matter most to the customer right now?",
-    "How is the customer currently using the product or service, and where are they experiencing friction?",
+    "How are they currently using the product or service, and where are they experiencing friction?",
     "What would make this conversation successful from the customer's perspective?"
   ],
   opportunities: [
-    "Connect the customer's priorities to specific ways the product can provide value",
+    "Connect the customer's priorities to specific ways the product or service can provide value",
     "Identify gaps in adoption, workflow, or customer experience that the CSM can help address",
     "Agree on clear next steps and measures of success"
   ],
   risks: [
-    "The customer may have access to the product without incorporating it into their regular workflows",
-    "Customer priorities or stakeholders may have changed since the last conversation"
+    "The customer may have access to the product or service without fully incorporating it into their regular workflows",
+    "Customer priorities, stakeholders, or expectations may have changed since the last conversation"
   ]
 };
 
@@ -33,12 +33,12 @@ $("generate").addEventListener("click", async () => {
 });
 
 $("demoSample").addEventListener("click", () => {
-  $("company").value = "Alpine Fresh";
-  $("website").value = "https://www.alpinefresh.com/";
-  $("industry").value = "Fresh produce";
+  $("company").value = "Thrive Causemetics";
+  $("website").value = "https://thrivecausemetics.com/";
+  $("industry").value = "Beauty and cosmetics";
   $("conversationType").value = "Account review";
-  $("notes").value = "Fresh produce company shipping temperature sensitive products. Use this as a sample customer context.";
-  renderBrief("Alpine Fresh", demoBrief);
+  $("notes").value = "Direct to consumer beauty brand with a strong focus on customer experience, product innovation, and community impact. Use this as a sample customer context.";
+  renderBrief("Thrive Causemetics", demoBrief);
 });
 
 async function generateBrief() {
@@ -93,8 +93,8 @@ async function generateBrief() {
     if (error.name === "AbortError") {
       error = new Error("The request took longer than expected. Please try again.");
     }
-    result.innerHTML = `<div class="error"><strong>AI generation is not available right now.</strong><p>${escapeHtml(error.message)}</p><p>You can still preview the sample brief below.</p><button id="demo">View Alpine Fresh sample</button></div>`;
-    $("demo").addEventListener("click", () => renderBrief("Alpine Fresh", demoBrief));
+    result.innerHTML = `<div class="error"><strong>AI generation is not available right now.</strong><p>${escapeHtml(error.message)}</p><p>You can still preview the sample brief below.</p><button id="demo">View Thrive Causemetics sample</button></div>`;
+    $("demo").addEventListener("click", () => renderBrief("Thrive Causemetics", demoBrief));
   } finally {
     button.disabled = false;
     button.textContent = "Generate customer brief";
