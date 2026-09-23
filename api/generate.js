@@ -8,7 +8,7 @@ export default async function handler(request, response) {
   }
 
   try {
-    const body = await request.json();
+    const body = request.body || {};
     const company = String(body.company || "").trim();
     const website = String(body.website || "").trim();
     const industry = String(body.industry || "").trim();
