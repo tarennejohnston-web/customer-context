@@ -37,13 +37,34 @@ $("generate").addEventListener("click", async () => {
   result.classList.remove("hidden");
   result.innerHTML = '<div class="loading">Building your customer brief...</div>';
 
-  await new Promise(resolve => setTimeout(resolve, 650));
+  const payload = {
+    company: $("company").value.trim(),
+    website: $("website").value.trim(),
+    industry: $("industry").value.trim(),
+    notes: $("notes").value.trim()
+  };
 
-  const company = $("company").value.trim() || "This customer";
-  renderBrief(company, demoBrief);
+  try {
+    const response = await fetch("/api/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
 
-  button.disabled = false;
-  button.textContent = "Generate customer brief";
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Unable to generate the brief.");
+    }
+
+    renderBrief(payload.company || "This customer", data.brief);
+  } catch (error) {
+    result.innerHTML = `<div class="error"><strong>AI generation is not available yet.</strong><p>${escapeHtml(error.message)}</p><p>You can still preview the sample brief by clicking below.</p><button id="demo">View sample brief</button></div>`;
+    $("demo").addEventListener("click", () => renderBrief(payload.company || "Apapacho Wines", demoBrief));
+  } finally {
+    button.disabled = false;
+    button.textContent = "Generate customer brief";
+  }
 });
 
 function renderBrief(company, brief) {
@@ -70,11 +91,11 @@ function section(title, text) {
 }
 
 function listSection(title, items) {
-  return `<div class="brief-section"><h3>${title}</h3><ul>${items.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul></div>`;
+  return `<div class="brief-section"><h3>${title}</h3><ul>${(items || []).map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul></div>`;
 }
 
 function escapeHtml(value) {
-  return value.replace(/[&<>"']/g, char => ({
+  return String(value).replace(/[&<>"']/g, char => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
   }[char]));
 }
