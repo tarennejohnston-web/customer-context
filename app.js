@@ -57,7 +57,18 @@ $("generate").addEventListener("click", async () => {
 
     clearTimeout(timeout);
 
-    const data = await response.json();
+    const raw = await response.text();
+    let data;
+
+    try {
+      data = JSON.parse(raw);
+    } catch {
+      throw new Error(
+        response.ok
+          ? "The server returned an unexpected response."
+          : `Server error (${response.status}): ${raw.slice(0, 500)}`
+      );
+    }
 
     if (!response.ok) {
       throw new Error(data.error || "Unable to generate the brief.");
