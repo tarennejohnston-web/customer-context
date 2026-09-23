@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Context</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="hero">
+      <div class="eyebrow">CUSTOMER SUCCESS TOOL</div>
+      <h1>Customer Context</h1>
+      <p>Get the context you need before your next customer conversation.</p>
+    </header>
+
+    <section class="card">
+      <div class="form-grid">
+        <label>
+          <span>Company name</span>
+          <input id="company" value="Apapacho Wines" placeholder="e.g. Apapacho Wines">
+        </label>
+        <label>
+          <span>Website</span>
+          <input id="website" placeholder="e.g. apapacho.com">
+        </label>
+        <label>
+          <span>Industry</span>
+          <input id="industry" value="Wine and beverage" placeholder="e.g. Logistics">
+        </label>
+        <label class="full">
+          <span>Customer notes</span>
+          <textarea id="notes" rows="4" placeholder="Add anything you already know about this customer...">Apapacho produces and distributes wine and ships temperature sensitive products.</textarea>
+        </label>
+      </div>
+      <button id="generate">Generate customer brief</button>
+      <p class="hint">AI generated. Use as a starting point, not a source of truth.</p>
+    </section>
+
+    <section id="result" class="result hidden"></section>
+
+    <footer>
+      Built as an AI learning project for Customer Success.
+    </footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
