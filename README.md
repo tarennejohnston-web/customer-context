@@ -1,42 +1,62 @@
 # Customer Context
 
-Customer Context is a small AI learning project designed around a practical Customer Success problem:
+Customer Context is an AI powered Customer Success research assistant.
 
-**How can a CSM get enough customer context to have a better conversation without spending a large amount of time researching every account?**
+**Turn basic customer information into a practical account brief before a customer conversation.**
 
-## What it does
+## The problem
 
-The prototype takes basic customer information and produces a structured conversation brief covering:
+CSMs often manage many accounts at once. Researching every customer from scratch takes time, but going into a conversation without context can make the interaction less relevant.
+
+This project explores a small, focused use of AI: helping a CSM get to useful customer context faster while keeping human judgment in the loop.
+
+## What it generates
+
+For each customer, the tool creates:
 
 - Customer snapshot
-- Business priorities
+- Likely business priorities
 - Potential challenges
-- Questions to ask
+- Questions a CSM should ask
 - Potential value opportunities
 - Risks to watch
 
-The demo uses Apapacho Wines as an example input. The example output is intentionally framed as hypotheses rather than verified company facts.
+The prompt explicitly tells the model not to invent facts and to distinguish known information from reasonable hypotheses.
 
-## Why I built it
+## AI architecture
 
-Customer Success teams often manage many accounts at once. Researching every customer from scratch can take significant time, but going into a conversation without context can make the interaction less relevant.
+The browser collects the customer inputs and sends them to a server side Vercel Function at `/api/generate`.
 
-This project explores how AI can help a CSM get to useful context faster while keeping human judgment in the loop.
+The server side function calls the OpenAI Responses API using an environment variable named `OPENAI_API_KEY`. The API key is never exposed in the browser or committed to GitHub.
 
-## What I learned
+The project uses GPT 5.6 Luna for a cost conscious customer research workflow.
 
-I focused on three things:
+## Demo
 
-1. Turning a real workflow problem into a small product
-2. Designing AI output around a specific user rather than asking for a generic summary
-3. Making the tool explicit about assumptions so AI generated information is not treated as fact
+The included Apapacho Wines example uses supplied demo notes about a wine business shipping temperature sensitive products. The generated analysis should be treated as a working hypothesis unless the underlying company information has been independently verified.
 
-## Next step
+## Guardrails
 
-The current version is a frontend prototype with a sample customer brief. The next iteration can connect the interface to an LLM through a server side API route so the brief is generated dynamically from the customer's inputs.
+This is a decision support tool, not a source of truth.
 
-## Tech
+The prompt is designed to:
 
-HTML, CSS, JavaScript
+1. Separate supplied information from inference
+2. Avoid fabricated company facts
+3. Keep recommendations tied to the customer's stated context
+4. Give the CSM questions to validate assumptions with the customer
 
-Built as part of my ongoing exploration of AI, Customer Success, and workflow improvement.
+## Stack
+
+HTML, CSS, JavaScript, Vercel Functions, OpenAI Responses API
+
+## Run locally
+
+1. Install Node.js.
+2. Set `OPENAI_API_KEY` in your local environment.
+3. Serve the project through Vercel or another server that supports the `/api` function.
+4. Open the site and enter a customer.
+
+For deployment, add `OPENAI_API_KEY` as a Vercel Environment Variable rather than putting it in source code.
+
+Built as an AI learning project by Tarenne Johnston.
