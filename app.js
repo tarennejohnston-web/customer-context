@@ -1,34 +1,46 @@
 const demoBrief = {
-  snapshot: "Apapacho Wines is presented here as a wine and beverage business shipping temperature sensitive products. The details below are a working hypothesis based on the information entered, not verified company research.",
+  snapshot: "Alpine Fresh is a fresh produce company where shipment conditions and delivery timing can directly affect product quality. The details below are based on public customer context and are intended as a sample starting point for a CSM conversation.",
   priorities: [
     "Protect product quality during transit",
-    "Reduce late or disrupted deliveries",
-    "Create a more proactive view of shipment issues"
+    "Reduce delays and temperature related shipment issues",
+    "Create earlier visibility into shipments that may need intervention"
   ],
   challenges: [
-    "Limited visibility into conditions while products are in transit",
-    "A delay or temperature issue may only become visible after the shipment is already at risk",
-    "Operational teams may have data without a consistent workflow for acting on it"
+    "Fresh produce can be especially sensitive to temperature conditions during transit",
+    "A shipment issue can become costly if the team learns about it after the product is already at risk",
+    "Operational teams need a clear process for deciding when and how to intervene"
   ],
   questions: [
-    "When a shipment is delayed today, how quickly does your team know there is a problem?",
-    "What conditions create the biggest risk for your products while they are in transit?",
-    "Who owns the response when a shipment starts moving outside the expected range?"
+    "When a shipment starts moving outside the expected conditions, who is notified and how quickly?",
+    "Which products or routes create the most operational risk today?",
+    "What does your team currently do when a shipment is delayed or a temperature issue is detected?"
   ],
   opportunities: [
-    "Use shipment and condition data to identify issues earlier",
-    "Build a repeatable workflow for responding to at risk shipments",
-    "Connect shipment visibility to the team's existing customer and operational processes"
+    "Use shipment data to identify at risk loads earlier",
+    "Build a repeatable workflow for responding to temperature or delivery exceptions",
+    "Connect shipment visibility to the team's existing operational and customer workflows"
   ],
   risks: [
     "The customer may have access to shipment data without incorporating it into daily workflows",
-    "If the value of proactive monitoring is not clear, adoption may remain passive"
+    "If alerts are not tied to clear actions, monitoring may become passive rather than operational"
   ]
 };
 
 const $ = (id) => document.getElementById(id);
 
 $("generate").addEventListener("click", async () => {
+  await generateBrief();
+});
+
+$("demoSample").addEventListener("click", () => {
+  $("company").value = "Alpine Fresh";
+  $("website").value = "";
+  $("industry").value = "Fresh produce";
+  $("notes").value = "Fresh produce company shipping temperature sensitive products. Use this as a sample customer context.";
+  renderBrief("Alpine Fresh", demoBrief);
+});
+
+async function generateBrief() {
   const button = $("generate");
   const result = $("result");
 
@@ -46,7 +58,7 @@ $("generate").addEventListener("click", async () => {
 
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 18000);
+    const timeout = setTimeout(() => controller.abort(), 30000);
 
     const response = await fetch("/api/generate", {
       method: "POST",
@@ -77,15 +89,15 @@ $("generate").addEventListener("click", async () => {
     renderBrief(payload.company || "This customer", data.brief);
   } catch (error) {
     if (error.name === "AbortError") {
-      error = new Error("The server did not respond within 18 seconds. Open the API endpoint directly to check whether Vercel is serving the function.");
+      error = new Error("The request took longer than expected. Please try again.");
     }
-    result.innerHTML = `<div class="error"><strong>AI generation is not available yet.</strong><p>${escapeHtml(error.message)}</p><p>You can still preview the sample brief by clicking below.</p><button id="demo">View sample brief</button></div>`;
-    $("demo").addEventListener("click", () => renderBrief(payload.company || "Apapacho Wines", demoBrief));
+    result.innerHTML = `<div class="error"><strong>AI generation is not available right now.</strong><p>${escapeHtml(error.message)}</p><p>You can still preview the sample brief below.</p><button id="demo">View Alpine Fresh sample</button></div>`;
+    $("demo").addEventListener("click", () => renderBrief("Alpine Fresh", demoBrief));
   } finally {
     button.disabled = false;
     button.textContent = "Generate customer brief";
   }
-});
+}
 
 function renderBrief(company, brief) {
   $("result").innerHTML = `
