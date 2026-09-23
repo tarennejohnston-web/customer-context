@@ -11,18 +11,18 @@ const demoBrief = {
     "Operational teams need a clear process for deciding when and how to intervene"
   ],
   questions: [
-    "When a shipment starts moving outside the expected conditions, who is notified and how quickly?",
-    "Which products or routes create the most operational risk today?",
-    "What does your team currently do when a shipment is delayed or a temperature issue is detected?"
+    "What outcomes matter most to the customer right now?",
+    "How is the customer currently using the product or service, and where are they experiencing friction?",
+    "What would make this conversation successful from the customer's perspective?"
   ],
   opportunities: [
-    "Use shipment data to identify at risk loads earlier",
-    "Build a repeatable workflow for responding to temperature or delivery exceptions",
-    "Connect shipment visibility to the team's existing operational and customer workflows"
+    "Connect the customer's priorities to specific ways the product can provide value",
+    "Identify gaps in adoption, workflow, or customer experience that the CSM can help address",
+    "Agree on clear next steps and measures of success"
   ],
   risks: [
-    "The customer may have access to shipment data without incorporating it into daily workflows",
-    "If alerts are not tied to clear actions, monitoring may become passive rather than operational"
+    "The customer may have access to the product without incorporating it into their regular workflows",
+    "Customer priorities or stakeholders may have changed since the last conversation"
   ]
 };
 
@@ -34,8 +34,9 @@ $("generate").addEventListener("click", async () => {
 
 $("demoSample").addEventListener("click", () => {
   $("company").value = "Alpine Fresh";
-  $("website").value = "";
+  $("website").value = "https://www.alpinefresh.com/";
   $("industry").value = "Fresh produce";
+  $("conversationType").value = "Account review";
   $("notes").value = "Fresh produce company shipping temperature sensitive products. Use this as a sample customer context.";
   renderBrief("Alpine Fresh", demoBrief);
 });
@@ -53,6 +54,7 @@ async function generateBrief() {
     company: $("company").value.trim(),
     website: $("website").value.trim(),
     industry: $("industry").value.trim(),
+    conversationType: $("conversationType").value.trim(),
     notes: $("notes").value.trim()
   };
 
